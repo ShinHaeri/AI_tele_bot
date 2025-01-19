@@ -55,92 +55,85 @@ class LangChainService:
         self.client = anthropic.Client(api_key=self.api_key)
         self.model = "claude-3-haiku-20240307"
         
-        # 1단계: 기본 정보 정리 및 요약
+        # 1단계: 스크립트 생성
         self.summary_prompt = ChatPromptTemplate.from_messages([
-            ("system", """당신은 전문적인 분석가입니다.
-            제공된 정보를 바탕으로 명확하고 체계적인 분석 보고서를 작성해주세요.
+            ("system", """당신은 숏폼 콘텐츠 전문 작가입니다.
+            제공된 정보를 바탕으로 매력적인 숏폼 스크립트를 작성해주세요.
             
             다음 형식을 정확히 따라주세요:
             
-            # 제목
-            [한 줄로 5단어 이내]
+            # 오프닝
+            [0:00-0:05]
+            [시청자의 관심을 끄는 강력한 후킹 문구]
             
-            # 핵심 내용
-            [한 줄로 10단어 이내]
+            # 메인 내용
+            [0:05-0:45]
+            [핵심 내용을 시간대별로 구성]
+            [각 시간대별 구체적인 대사와 액션]
             
-            # 상세 설명
-            [3-4문장으로 주요 특징과 장점을 설명]
-            
-            # 배경 분석
-            - 현재 상황: [현재 상태 한 줄 설명]
-            - 해결 방안: [한 줄로 설명]
-            - 차별점: [한 줄로 설명]
-            - 범위: [대상/규모를 구체적으로 설명]
-            
-            # 실행 계획
-            [3-4문장으로 구현 방법과 필요한 자원을 설명]
-            
-            # 기대 효과
-            - 주요 효과: [한 줄로 설명]
-            - 부가 효과: [한 줄로 설명]
-            - 지속성: [한 줄로 설명]
+            # 클로징
+            [0:45-1:00]
+            [콜투액션과 마무리 멘트]
             
             주의사항:
-            1. 각 섹션의 제목은 반드시 '# ' 으로 시작
-            2. 리스트 항목은 반드시 '- ' 으로 시작
-            3. 모든 내용은 들여쓰기 없이 작성
-            4. 빈 줄은 섹션 구분에만 사용
-            5. 구체적인 예시와 수치 포함"""),
+            1. 시간대는 반드시 [시작-끝] 형식으로 표시
+            2. 각 섹션은 반드시 '# '으로 시작
+            3. 대사는 명확하고 간결하게
+            4. 시청자의 관심을 끌 수 있는 요소 포함
+            5. 플랫폼 특성에 맞는 톤앤매너 사용"""),
             
-            ("human", """아이디어: {idea}
-            분야: {category}
-            형태: {approach}
-            타겟: {target}
-            문제: {problem}
-            해결방안: {solution}
-            구현기술: {implementation}
-            목표: {goals}
-            필요사항: {needs}""")
+            ("human", """콘텐츠 유형: {content_type}
+            타겟: {target_audience}
+            플랫폼: {platform}
+            트렌드: {trend_analysis}
+            벤치마크: {benchmark}
+            벤치마크 포인트: {benchmark_point}
+            콘텐츠 형식: {content_format}
+            주제: {content_topic}
+            특별 요소: {special_element}
+            영상 길이: {video_length}
+            비주얼: {visual_element}
+            스토리라인: {storyline}""")
         ])
         
-        # 2단계: 상세 분석 및 제안
+        # 2단계: 제안사항 생성
         self.analysis_prompt = ChatPromptTemplate.from_messages([
-            ("system", """당신은 전문적인 컨설턴트입니다.
+            ("system", """당신은 숏폼 콘텐츠 전문 컨설턴트입니다.
 
-            1단계에서 정리된 내용을 바탕으로 상세 분석을 수행하고 제안을 해주세요.
+            1단계에서 작성된 스크립트를 바탕으로 개선점과 제안사항을 제시해주세요.
 
             다음 형식으로 응답해주세요:
 
-            # 유사 사례
-            - [사례 1]: 특징, 분야, 성공/실패 요인
-            - [사례 2]: 특징, 분야, 성공/실패 요인
-            - [사례 3]: 특징, 분야, 성공/실패 요인
+            # 후킹 문구 제안
+            - [대안 1]: 더 강력한 후킹 문구
+            - [대안 2]: 다른 접근 방식의 후킹 문구
+            - [대안 3]: 트렌드를 활용한 후킹 문구
 
-            # 실현 가능성
-            - 기술: [필요한 기술과 난이도]
-            - 자원: [필요한 자원]
-            - 기간: [예상 소요 기간]
-            - 제약: [예상되는 어려움]
+            # 비주얼 요소 제안
+            - 화면 구성: [레이아웃과 구도]
+            - 자막 활용: [효과적인 자막 배치]
+            - 전환 효과: [추천 전환 효과]
+            - 색감: [추천 색상 팔레트]
 
-            # 발전 방향
-            - 단기: [1-3개월 목표]
-            - 중기: [3-6개월 목표]
-            - 장기: [6개월 이상 목표]
-            - 계획: [실행 단계]
+            # 트렌드 요소
+            - 해시태그: [추천 해시태그]
+            - 음악: [추천 배경음악]
+            - 효과음: [추천 효과음]
+            - 필터: [추천 필터/효과]
 
-            # 개선 사항
-            - 보완점: [주요 보완 사항]
-            - 방안: [개선 방법]
-            - 주의점: [고려 사항]
-            - 효과: [예상 효과]
+            # 최적화 팁
+            - 타이밍: [시간 배분 조정]
+            - 구성: [흐름 개선]
+            - 강조점: [핵심 포인트]
+            - 참고: [유사 콘텐츠 추천]
 
             주의사항:
             1. 각 섹션은 반드시 '# '으로 시작
             2. 모든 항목은 반드시 '- '으로 시작
             3. 빈 줄은 섹션 구분에만 사용
-            4. 실제 글로벌 벤처투자 사례와 데이터에 기반하여 구체적인 수치와 전략을 제시"""),
+            4. 실제 트렌드와 성공 사례를 반영한 구체적인 제안"""),
             
-            ("human", """사업계획서 요약: {summary}""")
+            ("human", """스크립트: {script}""")
         ])
 
     def _get_summary(self, data):
@@ -174,29 +167,29 @@ class LangChainService:
         )
         return response.content[0].text
 
-    def _get_analysis(self, summary):
+    def _get_analysis(self, script):
         """
-        2단계: 상세 분석 및 제안
+        2단계: 제안사항 생성
         
-        1단계에서 생성된 요약을 바탕으로 상세 분석을 수행합니다.
+        1단계에서 생성된 스크립트를 바탕으로 개선점과 제안사항을 생성합니다.
         
         분석 섹션:
-        1. 유사 사례: 참고할 만한 실제 사례들
-        2. 실현 가능성: 기술적/자원적 관점의 분석
-        3. 발전 방향: 단기/중기/장기 목표
-        4. 개선 사항: 보완이 필요한 부분과 방안
+        1. 후킹 문구: 대체 후킹 문구 제안
+        2. 비주얼 요소: 화면 구성, 자막, 효과 등
+        3. 트렌드 요소: 해시태그, 음악, 필터 등
+        4. 최적화 팁: 타이밍, 구성, 강조점 등
         
         Args:
-            summary (str): 1단계에서 생성된 요약
+            script (str): 1단계에서 생성된 스크립트
             
         Returns:
-            str: 상세 분석 결과 텍스트
+            str: 제안사항 텍스트
         """
         response = self.client.messages.create(
             model=self.model,
             system=self.analysis_prompt.messages[0].prompt.template,
             messages=[
-                {"role": "user", "content": f"사업계획서 요약: {summary}"}
+                {"role": "user", "content": f"스크립트: {script}"}
             ],
             max_tokens=4000
         )
@@ -266,8 +259,8 @@ class LangChainService:
         
         return result
 
-    async def analyze_startup(self, data: Dict) -> Optional[Dict]:
-        """스타트업 분석 수행"""
+    async def generate_script(self, data: Dict) -> Optional[Dict]:
+        """숏폼 스크립트 생성"""
         try:
             # 디버깅 실행
             await self.debug_chain(data)
@@ -278,20 +271,20 @@ class LangChainService:
             analysis = await asyncio.to_thread(self._get_analysis, summary)
             
             # 결과를 직접 구성
-            analysis_result = {
-                'summary': summary,
-                'case_studies': [],
-                'feasibility': [],
-                'development_plan': [],
-                'improvements': []
+            script_result = {
+                'script': summary,
+                'hooks': [],
+                'visual_suggestions': [],
+                'trending_elements': [],
+                'optimization_tips': []
             }
             
             # 섹션 매핑 정의
             section_mapping = {
-                '유사 사례': 'case_studies',
-                '실현 가능성': 'feasibility',
-                '발전 방향': 'development_plan',
-                '개선 사항': 'improvements'
+                '후킹 문구 제안': 'hooks',
+                '비주얼 요소 제안': 'visual_suggestions',
+                '트렌드 요소': 'trending_elements',
+                '최적화 팁': 'optimization_tips'
             }
             
             # 분석 결과 파싱
@@ -313,7 +306,7 @@ class LangChainService:
                             mapped_section = section_mapping[current_section]
                             print(f"\nProcessing section: {current_section} -> {mapped_section}")
                             print(f"Parsed content: {parsed_content}")
-                            analysis_result[mapped_section] = parsed_content
+                            script_result[mapped_section] = parsed_content
                     
                     # 새로운 섹션 시작
                     current_section = line[2:].strip()
@@ -330,22 +323,25 @@ class LangChainService:
                     mapped_section = section_mapping[current_section]
                     print(f"\nProcessing final section: {current_section} -> {mapped_section}")
                     print(f"Parsed content: {parsed_content}")
-                    analysis_result[mapped_section] = parsed_content
+                    script_result[mapped_section] = parsed_content
 
             # 원본 입력 데이터를 결과에 포함
-            analysis_result.update({
-                'idea': data.get('idea', ''),
-                'category': data.get('category', ''),
-                'approach': data.get('approach', ''),
-                'target': data.get('target', ''),
-                'problem': data.get('problem', ''),
-                'solution': data.get('solution', ''),
-                'implementation': data.get('implementation', ''),
-                'goals': data.get('goals', ''),
-                'needs': data.get('needs', '')
+            script_result.update({
+                'content_type': data.get('content_type', ''),
+                'target_audience': data.get('target_audience', ''),
+                'platform': data.get('platform', ''),
+                'trend_analysis': data.get('trend_analysis', ''),
+                'benchmark': data.get('benchmark', ''),
+                'benchmark_point': data.get('benchmark_point', ''),
+                'content_format': data.get('content_format', ''),
+                'content_topic': data.get('content_topic', ''),
+                'special_element': data.get('special_element', ''),
+                'video_length': data.get('video_length', ''),
+                'visual_element': data.get('visual_element', ''),
+                'storyline': data.get('storyline', '')
             })
             
-            return analysis_result
+            return script_result
             
         except Exception as e:
             print(f"분석 중 오류 발생: {e}")

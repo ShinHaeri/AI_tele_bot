@@ -35,85 +35,73 @@ init_db()
 # AI 분석 서비스 인스턴스
 langchain_service = LangChainService()
 
-# 대화 상태 정의 - 각 상태는 하나의 질문/응답 단계를 나타냅니다
-(WAITING_START, 
- IDEA,           # 아이디어 설명 (자유 입력)
- CATEGORY,       # 서비스 분야 선택
- APPROACH,       # 접근 방식 선택
- TARGET,         # 타겟 고객 선택
- PROBLEM,        # 해결할 문제 선택
- SOLUTION,       # 해결 방안 선택
- IMPLEMENTATION, # 구현 기술 선택
- GOALS,          # 목표 선택
- NEEDS,          # 필요 사항 선택
- ANALYZING,      # AI 분석 중
- HELP_MENU) = range(12)
+# 대화 상태 정의 - 숏폼 스크립트 작성을 위한 단계
+(WAITING_START,
+ CONTENT_TYPE,    # 콘텐츠 유형 선택
+ TARGET_AUDIENCE, # 타겟 오디언스 설정
+ PLATFORM,        # 업로드 플랫폼 선택
+ TREND_ANALYSIS,  # 트렌드 분석
+ BENCHMARK,       # 벤치마킹 계정
+ BENCHMARK_POINT, # 벤치마킹 포인트
+ CONTENT_FORMAT,  # 콘텐츠 형식
+ CONTENT_TOPIC,   # 콘텐츠 주제
+ SPECIAL_ELEMENT, # 특별 요소
+ VIDEO_LENGTH,    # 영상 길이
+ VISUAL_ELEMENT,  # 비주얼 요소
+ STORYLINE,       # 스토리라인
+ ANALYZING,       # AI 분석 중
+ HELP_MENU) = range(15)
 
 # 키보드 메뉴 정의 - 각 단계별로 사용자에게 제공할 선택지를 구성합니다
 # 필요에 따라 옵션을 수정하거나 새로운 키보드를 추가할 수 있습니다
 
-# 서비스 분야 선택 옵션
-CATEGORY_KEYBOARD = [
-    ['🚀 서비스/앱', '💡 콘텐츠/미디어'],
-    ['🤖 AI/데이터', '🎮 게임/엔터'],
-    ['🏥 건강/의료', '🎓 교육/이러닝'],
-    ['💰 금융/핀테크', '🛍️ 커머스/유통'],
+# 콘텐츠 유형 선택 옵션
+CONTENT_TYPE_KEYBOARD = [
+    ['🎭 코미디', '🎓 교육'],
+    ['💄 뷰티', '✈️ 여행'],
+    ['👗 패션', '🎮 챌린지'],
+    ['📹 브이로그', '🎵 음악'],
+    ['🍳 요리', '📢 사회적 이슈'],
     ['✨ 직접 입력']
 ]
 
-# 서비스 형태 선택 옵션
-APPROACH_KEYBOARD = [
-    ['💫 B2C 서비스', '🎯 B2B 서비스'],
-    ['🤝 B2B2C 서비스', '💡 하드웨어'],
-    ['📊 플랫폼', '🌱 콘텐츠'],
-    ['✨ 직접 입력']
-]
-
-# 타겟 고객 선택 옵션
+# 타겟 오디언스 선택 옵션
 TARGET_KEYBOARD = [
-    ['👥 일반 소비자', '👨‍👩‍👧‍👦 가족/육아'],
-    ['👨‍💼 직장인', '🎓 학생'],
-    ['💼 소상공인', '🏢 기업'],
+    ['👶 10대', '👩 20대'],
+    ['👨 30대', '👴 40대'],
+    ['👵 50대 이상'],
+    ['👨 남성', '👩 여성'],
+    ['🌏 국내', '🌍 해외', '🌎 글로벌'],
     ['✨ 직접 입력']
 ]
 
-# 문제 유형 선택 옵션
-PROBLEM_KEYBOARD = [
-    ['⏰ 시간/비용 절약', '📈 생산성 향상'],
-    ['😊 편의성/접근성', '🤝 소통/협업'],
-    ['💡 정보/지식 습득', '🎯 목표 달성'],
+# 플랫폼 선택 옵션
+PLATFORM_KEYBOARD = [
+    ['📱 TikTok'],
+    ['📸 Instagram Reels'],
+    ['🎥 YouTube Shorts'],
     ['✨ 직접 입력']
 ]
 
-# 해결 방식 선택 옵션
-SOLUTION_KEYBOARD = [
-    ['📱 모바일 앱', '💻 웹 서비스'],
-    ['🤖 AI 솔루션', '🎮 게임/콘텐츠'],
-    ['🛠️ 자동화 도구', '🤝 플랫폼'],
+# 콘텐츠 형식 선택 옵션
+FORMAT_KEYBOARD = [
+    ['🎭 스킷', '📚 튜토리얼'],
+    ['⭐ 리뷰', '🎵 챌린지'],
+    ['📹 브이로그', '🗣️ 토크'],
     ['✨ 직접 입력']
 ]
 
-# 구현 기술 선택 옵션
-IMPLEMENTATION_KEYBOARD = [
-    ['📱 iOS/Android', '💻 웹/크로스플랫폼'],
-    ['☁️ 클라우드/서버', '🤖 AI/ML'],
-    ['🎮 게임엔진', '🔒 블록체인'],
+# 비주얼 요소 선택 옵션
+VISUAL_KEYBOARD = [
+    ['🎨 그래픽', '💬 자막'],
+    ['🎭 필터', '🎵 배경음악'],
     ['✨ 직접 입력']
 ]
 
-# 목표 선택 옵션
-GOALS_KEYBOARD = [
-    ['📈 매출/성장', '👥 유저 확보'],
-    ['🌟 브랜드 인지도', '🤝 파트너십'],
-    ['💰 투자 유치', '🌍 해외 진출'],
-    ['✨ 직접 입력']
-]
-
-# 필요 사항 선택 옵션
-NEEDS_KEYBOARD = [
-    ['👨‍💻 개발 인력', '🎨 기획/디자인'],
-    ['💰 초기 투자금', '📊 시장 검증'],
-    ['🤝 파트너/멘토', '📢 마케팅'],
+# 영상 길이 선택 옵션
+LENGTH_KEYBOARD = [
+    ['⚡ 15초', '🕐 30초'],
+    ['🕑 1분', '🕒 2분'],
     ['✨ 직접 입력']
 ]
 
@@ -164,8 +152,12 @@ async def handle_start_response(update: Update, context: ContextTypes.DEFAULT_TY
     text = update.message.text
     
     if text == '✨ 시작하기':
-        await update.message.reply_text(Elon.QUESTIONS['idea'])
-        return IDEA
+        reply_markup = ReplyKeyboardMarkup(CONTENT_TYPE_KEYBOARD, resize_keyboard=True)
+        await update.message.reply_text(
+            Elon.QUESTIONS['content_type'],
+            reply_markup=reply_markup
+        )
+        return CONTENT_TYPE
     elif text == '📚 외부 채널 연결':
         keyboard = [[
             InlineKeyboardButton(
@@ -183,20 +175,244 @@ async def handle_start_response(update: Update, context: ContextTypes.DEFAULT_TY
         await update.message.reply_text("안내 메세지 👀")
         return WAITING_START
 
-async def handle_idea(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def handle_content_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
-    아이디어 입력 처리 핸들러
+    콘텐츠 유형 선택 처리 핸들러
     
-    사용자가 입력한 아이디어 설명을 저장하고
-    다음 단계(서비스 분야 선택)로 진행합니다.
+    사용자가 선택한 콘텐츠 유형을 저장하고
+    다음 단계(타겟 오디언스 선택)로 진행합니다.
     """
-    context.user_data['idea'] = update.message.text
-    reply_markup = ReplyKeyboardMarkup(CATEGORY_KEYBOARD, resize_keyboard=True)
+    context.user_data['content_type'] = update.message.text
+    reply_markup = ReplyKeyboardMarkup(TARGET_KEYBOARD, resize_keyboard=True)
     await update.message.reply_text(
-        Elon.QUESTIONS['category'],
+        Elon.QUESTIONS['target_audience'],
         reply_markup=reply_markup
     )
-    return CATEGORY
+    return TARGET_AUDIENCE
+
+async def handle_target_audience(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    타겟 오디언스 선택 처리 핸들러
+    
+    사용자가 선택한 타겟 오디언스를 저장하고
+    다음 단계(플랫폼 선택)로 진행합니다.
+    """
+    context.user_data['target_audience'] = update.message.text
+    reply_markup = ReplyKeyboardMarkup(PLATFORM_KEYBOARD, resize_keyboard=True)
+    await update.message.reply_text(
+        Elon.QUESTIONS['platform'],
+        reply_markup=reply_markup
+    )
+    return PLATFORM
+
+async def handle_platform(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    플랫폼 선택 처리 핸들러
+    
+    사용자가 선택한 플랫폼을 저장하고
+    다음 단계(트렌드 분석)로 진행합니다.
+    """
+    context.user_data['platform'] = update.message.text
+    await update.message.reply_text(
+        Elon.QUESTIONS['trend_analysis']
+    )
+    return TREND_ANALYSIS
+
+async def handle_trend_analysis(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    트렌드 분석 입력 처리 핸들러
+    
+    사용자가 입력한 트렌드 정보를 저장하고
+    다음 단계(벤치마킹 계정)로 진행합니다.
+    """
+    context.user_data['trend_analysis'] = update.message.text
+    await update.message.reply_text(
+        Elon.QUESTIONS['benchmark']
+    )
+    return BENCHMARK
+
+async def handle_benchmark(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    벤치마킹 계정 입력 처리 핸들러
+    
+    사용자가 입력한 벤치마킹 계정을 저장하고
+    다음 단계(벤치마킹 포인트)로 진행합니다.
+    """
+    context.user_data['benchmark'] = update.message.text
+    await update.message.reply_text(
+        Elon.QUESTIONS['benchmark_point']
+    )
+    return BENCHMARK_POINT
+
+async def handle_benchmark_point(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    벤치마킹 포인트 입력 처리 핸들러
+    
+    사용자가 입력한 벤치마킹 포인트를 저장하고
+    다음 단계(콘텐츠 형식)로 진행합니다.
+    """
+    context.user_data['benchmark_point'] = update.message.text
+    reply_markup = ReplyKeyboardMarkup(FORMAT_KEYBOARD, resize_keyboard=True)
+    await update.message.reply_text(
+        Elon.QUESTIONS['content_format'],
+        reply_markup=reply_markup
+    )
+    return CONTENT_FORMAT
+
+async def handle_content_format(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    콘텐츠 형식 선택 처리 핸들러
+    
+    사용자가 선택한 콘텐츠 형식을 저장하고
+    다음 단계(콘텐츠 주제)로 진행합니다.
+    """
+    context.user_data['content_format'] = update.message.text
+    await update.message.reply_text(
+        Elon.QUESTIONS['content_topic']
+    )
+    return CONTENT_TOPIC
+
+async def handle_content_topic(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    콘텐츠 주제 입력 처리 핸들러
+    
+    사용자가 입력한 콘텐츠 주제를 저장하고
+    다음 단계(특별 요소)로 진행합니다.
+    """
+    context.user_data['content_topic'] = update.message.text
+    await update.message.reply_text(
+        Elon.QUESTIONS['special_element']
+    )
+    return SPECIAL_ELEMENT
+
+async def handle_special_element(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    특별 요소 입력 처리 핸들러
+    
+    사용자가 입력한 특별 요소를 저장하고
+    다음 단계(영상 길이)로 진행합니다.
+    """
+    context.user_data['special_element'] = update.message.text
+    reply_markup = ReplyKeyboardMarkup(LENGTH_KEYBOARD, resize_keyboard=True)
+    await update.message.reply_text(
+        Elon.QUESTIONS['video_length'],
+        reply_markup=reply_markup
+    )
+    return VIDEO_LENGTH
+
+async def handle_video_length(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    영상 길이 선택 처리 핸들러
+    
+    사용자가 선택한 영상 길이를 저장하고
+    다음 단계(비주얼 요소)로 진행합니다.
+    """
+    context.user_data['video_length'] = update.message.text
+    reply_markup = ReplyKeyboardMarkup(VISUAL_KEYBOARD, resize_keyboard=True)
+    await update.message.reply_text(
+        Elon.QUESTIONS['visual_element'],
+        reply_markup=reply_markup
+    )
+    return VISUAL_ELEMENT
+
+async def handle_visual_element(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    비주얼 요소 선택 처리 핸들러
+    
+    사용자가 선택한 비주얼 요소를 저장하고
+    다음 단계(스토리라인)로 진행합니다.
+    """
+    context.user_data['visual_element'] = update.message.text
+    await update.message.reply_text(
+        Elon.QUESTIONS['storyline']
+    )
+    return STORYLINE
+
+async def handle_storyline(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    스토리라인 입력 처리 핸들러
+    
+    사용자가 입력한 스토리라인을 저장하고
+    AI 분석을 시작합니다.
+    """
+    context.user_data['storyline'] = update.message.text
+    
+    try:
+        # 분석 시작 메시지 전송
+        await update.message.reply_text(
+            Elon.ANALYSIS_START,
+            reply_markup=ReplyKeyboardRemove()
+        )
+        
+        # AI 분석 수행 및 결과 대기
+        analysis_result = await langchain_service.generate_script(context.user_data)
+        
+        if not analysis_result:
+            await update.message.reply_text(
+                "⚠️ 분석 중 오류가 발생했습니다. 다시 시도해주세요."
+            )
+            return ConversationHandler.END
+            
+        # 분석 결과 저장 (실패해도 분석은 계속 진행)
+        try:
+            save_analysis(
+                telegram_id=update.effective_user.id,
+                input_data=context.user_data,
+                result=analysis_result
+            )
+        except Exception as e:
+            print(f"데이터베이스 저장 오류: {e}")
+        
+        # 분석 결과 구조 보존
+        formatted_result = {
+            'script': analysis_result.get('script', ''),
+            'hooks': analysis_result.get('hooks', []),
+            'visual_suggestions': analysis_result.get('visual_suggestions', []),
+            'trending_elements': analysis_result.get('trending_elements', []),
+            'optimization_tips': analysis_result.get('optimization_tips', [])
+        }
+        
+        # 디버깅 로그
+        print("\n=== Analysis Result Structure ===")
+        for key, value in formatted_result.items():
+            print(f"\n{key}:")
+            if isinstance(value, list):
+                for item in value:
+                    print(f"  {item}")
+            else:
+                print(f"  {value}")
+        
+        context.user_data['analysis_result'] = formatted_result
+        
+        # 분석 결과 메시지 전송
+        formatted_message = Elon.format_analysis_result(formatted_result)
+        await update.message.reply_text(formatted_message)
+        
+        # 분석 완료 후 인라인 키보드 생성
+        keyboard = [
+            [
+                InlineKeyboardButton("📱 틱톡 크리에이티브 센터", url="https://ads.tiktok.com/business/creativecenter/")
+            ],
+            [
+                InlineKeyboardButton("🎬 스크립트 공유", url="https://t.me/share/url?url=https://t.me/shortform_script_bot&text=✨숏폼 스크립트 작성 도우미✨"),
+                InlineKeyboardButton("💡 피드백", url="tg://resolve?domain=shortform_feedback")
+            ],
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        
+        await update.message.reply_text(
+            "분석이 완료되었습니다!",
+            reply_markup=reply_markup
+        )
+        
+        return ConversationHandler.END
+        
+    except Exception as e:
+        print(f"분석 중 오류 발생: {e}")
+        await update.message.reply_text(
+            "⚠️ 시스템 오류가 발생했습니다. 다시 시도해주세요."
+        )
+        return ConversationHandler.END
 
 async def handle_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
@@ -344,11 +560,11 @@ async def handle_needs(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
         # 분석 결과 구조 보존
         formatted_result = {
-            'summary': analysis_result.get('summary', ''),
-            'case_studies': analysis_result.get('case_studies', []),
-            'feasibility': analysis_result.get('feasibility', []),
-            'development_plan': analysis_result.get('development_plan', []),
-            'improvements': analysis_result.get('improvements', [])
+            'script': analysis_result.get('script', ''),
+            'hooks': analysis_result.get('hooks', []),
+            'visual_suggestions': analysis_result.get('visual_suggestions', []),
+            'trending_elements': analysis_result.get('trending_elements', []),
+            'optimization_tips': analysis_result.get('optimization_tips', [])
         }
         
         # 디버깅 로그
@@ -370,11 +586,11 @@ async def handle_needs(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # 분석 완료 후 인라인 키보드 생성
         keyboard = [
             [
-                InlineKeyboardButton("외부 링크 연결", url="http://starlenz.notion.site")
+                InlineKeyboardButton("📱 틱톡 크리에이티브 센터", url="https://ads.tiktok.com/business/creativecenter/")
             ],
             [
-                InlineKeyboardButton("공유하기", url="https://t.me/share/url?url=https://t.me/starlenz_bot&text=✨아이디어 분석 도우미✨"),
-                InlineKeyboardButton("관리자 문의", url="tg://resolve?domain=starlenz_inc")
+                InlineKeyboardButton("🎬 스크립트 공유", url="https://t.me/share/url?url=https://t.me/shortform_script_bot&text=✨숏폼 스크립트 작성 도우미✨"),
+                InlineKeyboardButton("💡 피드백", url="tg://resolve?domain=shortform_feedback")
             ],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -493,18 +709,21 @@ analysis_conversation = ConversationHandler(
         CommandHandler("cancel", cancel)
     ],
     
-    # 상태별 핸들러 - 각 상태에서 처리할 수 있는 사용자 입력 정의
+    # 상태별 핸들러 - 숏폼 스크립트 작성을 위한 단계별 처리
     states={
         WAITING_START: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_start_response)],
-        IDEA: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_idea)],
-        CATEGORY: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_category)],
-        APPROACH: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_approach)],
-        TARGET: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_target)],
-        PROBLEM: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_problem)],
-        SOLUTION: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_solution)],
-        IMPLEMENTATION: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_implementation)],
-        GOALS: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_goals)],
-        NEEDS: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_needs)],
+        CONTENT_TYPE: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_content_type)],
+        TARGET_AUDIENCE: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_target_audience)],
+        PLATFORM: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_platform)],
+        TREND_ANALYSIS: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_trend_analysis)],
+        BENCHMARK: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_benchmark)],
+        BENCHMARK_POINT: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_benchmark_point)],
+        CONTENT_FORMAT: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_content_format)],
+        CONTENT_TOPIC: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_content_topic)],
+        SPECIAL_ELEMENT: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_special_element)],
+        VIDEO_LENGTH: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_video_length)],
+        VISUAL_ELEMENT: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_visual_element)],
+        STORYLINE: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_storyline)],
         ANALYZING: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_analysis)],
         HELP_MENU: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_help_menu)]
     },
